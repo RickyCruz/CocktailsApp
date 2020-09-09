@@ -1,16 +1,31 @@
 package com.konztic.tragosapp.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.konztic.tragosapp.R
+import com.konztic.tragosapp.data.DataSource
+import com.konztic.tragosapp.data.model.Drink
+import com.konztic.tragosapp.domain.RepoImpl
+import com.konztic.tragosapp.ui.adapters.DrinkAdapter
+import com.konztic.tragosapp.ui.viewmodel.MainViewModel
+import com.konztic.tragosapp.ui.viewmodel.VMFactory
+import com.konztic.tragosapp.vo.Resource
 import kotlinx.android.synthetic.main.fragment_main.*
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
+
+    private val viewModel by viewModels<MainViewModel> {
+        VMFactory(RepoImpl(DataSource()))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +40,36 @@ class MainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        btn_go_to_details.setOnClickListener {
-            findNavController().navigate(R.id.cocktailDetailFragment)
-        }
+        super.onViewCreated(view, savedInstanceState)
+        setUpRecyclerView()
+
+        viewModel.fetchDrinksList.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Resource.Loading -> {
+                    progress_bar.visibility = View.VISIBLE
+                }
+                is Resource.Success -> {
+                    progress_bar.visibility = View.GONE
+                    rv_drinks.adapter = DrinkAdapter(requireContext(), response.data, this)
+                }
+                is Resource.Failure -> {
+                    progress_bar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Something is wrong! ${ response.exception }", Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+    }
+
+    private fun setUpRecyclerView() {
+        rv_drinks.layoutManager = LinearLayoutManager(requireContext())
+        rv_drinks.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+    }
+
+    override fun onDrinkClick(drink: Drink) {
+        val bundle = Bundle()
+        bundle.putParcelable("drink", drink)
+
+        findNavController().navigate(R.id.cocktailDetailFragment, bundle)
     }
 
 }

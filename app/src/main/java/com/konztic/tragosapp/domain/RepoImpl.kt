@@ -7,6 +7,6 @@ import com.konztic.tragosapp.vo.Resource
 class RepoImpl(private val dataSource: DataSource): Repo {
 
     override fun getDrinkList(): Resource<List<Drink>> {
-        return dataSource.getDrinksList()
+        return dataSource.generateDrinkList
     }
 }
