@@ -1,20 +1,31 @@
 package com.konztic.tragosapp.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import com.konztic.tragosapp.domain.Repo
 import com.konztic.tragosapp.vo.Resource
 import kotlinx.coroutines.Dispatchers
 import java.lang.Exception
 
 class MainViewModel(private val repo: Repo): ViewModel() {
-    val fetchDrinksList = liveData(Dispatchers.IO) {
-        emit(Resource.Loading())
+    private val drinksData = MutableLiveData<String>()
 
-        try {
-            emit(repo.getDrinkList("margarita"))
-        } catch (e: Exception) {
-            emit(Resource.Failure(e))
+    fun setDrink(drinkName: String) {
+        drinksData.value = drinkName
+    }
+
+    init {
+        setDrink("margarita")
+    }
+
+    val fetchDrinksList = drinksData.distinctUntilChanged().switchMap { drinkName ->
+        liveData(Dispatchers.IO) {
+            emit(Resource.Loading())
+
+            try {
+                emit(repo.getDrinkList(drinkName))
+            } catch (e: Exception) {
+                emit(Resource.Failure(e))
+            }
         }
     }
 }
