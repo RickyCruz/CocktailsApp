@@ -88,7 +88,7 @@ class MainFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
         val bundle = Bundle()
         bundle.putParcelable("drink", drink)
 
-        findNavController().navigate(R.id.cocktailDetailFragment, bundle)
+        findNavController().navigate(R.id.action_mainFragment_to_detailCocktailFragment, bundle)
     }
 
 }
