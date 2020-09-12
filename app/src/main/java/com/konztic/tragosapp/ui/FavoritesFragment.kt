@@ -9,15 +9,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.konztic.tragosapp.AppDatabase
 import com.konztic.tragosapp.R
 import com.konztic.tragosapp.data.DataSource
+import com.konztic.tragosapp.data.model.Drink
 import com.konztic.tragosapp.domain.RepoImpl
+import com.konztic.tragosapp.ui.adapters.DrinkAdapter
 import com.konztic.tragosapp.ui.viewmodel.MainViewModel
 import com.konztic.tragosapp.ui.viewmodel.VMFactory
 import com.konztic.tragosapp.vo.Resource
+import kotlinx.android.synthetic.main.fragment_favorites.*
+import kotlinx.android.synthetic.main.fragment_main.*
 
-class FavoritesFragment : Fragment() {
+class FavoritesFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
 
     private val viewModel by activityViewModels<MainViewModel> {
         VMFactory(
@@ -42,18 +48,45 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setUpRecyclerView()
+        setUpObservers()
+    }
+
+    private fun setUpObservers() {
         viewModel.getFavoriteDrinks().observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Loading -> {
                 }
                 is Resource.Success -> {
-                    Log.d("LIST", "${ response.data }")
+                    val favoriteDrinks = response.data.map {
+                        Drink(it.drinkId, it.image, it.name, it.description, it.hasAlcohol)
+                    }
+
+                    /*val list = response.data
+                    val listDrink = mutableListOf<Drink>()
+
+                    for (drink in list) {
+                        listDrink.add(
+                            Drink(drink.drinkId, drink.image, drink.name, drink.description, drink.hasAlcohol)
+                        )
+                    }*/
+
+                    rv_drinks.adapter = DrinkAdapter(requireContext(), favoriteDrinks, this)
                 }
                 is Resource.Failure -> {
                     Toast.makeText(requireContext(), "Something is wrong! ${ response.exception }", Toast.LENGTH_LONG).show()
                 }
             }
         })
+    }
+
+    private fun setUpRecyclerView() {
+        rv_favorite_drinks.layoutManager = LinearLayoutManager(requireContext())
+        rv_favorite_drinks.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+    }
+
+    override fun onDrinkClick(drink: Drink) {
+        TODO("Not yet implemented")
     }
 
 }
