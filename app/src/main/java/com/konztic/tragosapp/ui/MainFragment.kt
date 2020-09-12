@@ -21,18 +21,14 @@ import com.konztic.tragosapp.ui.adapters.DrinkAdapter
 import com.konztic.tragosapp.ui.viewmodel.MainViewModel
 import com.konztic.tragosapp.ui.viewmodel.VMFactory
 import com.konztic.tragosapp.vo.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_cocktail_detail.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
+@AndroidEntryPoint
 class MainFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
 
-    private val viewModel by activityViewModels<MainViewModel> {
-        VMFactory(
-            RepoImpl(
-                DataSourceImpl(AppDatabase.getDatabase(requireActivity().applicationContext))
-            )
-        )
-    }
+    private val viewModel by activityViewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +47,7 @@ class MainFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
         setUpRecyclerView()
         setUpSearchView()
         setUpObservers()
-        btn_save_or_delete_drink.setOnClickListener {
+        btn_go_to_favorites.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_favoritesFragment)
         }
     }

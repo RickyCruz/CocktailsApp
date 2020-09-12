@@ -1,5 +1,6 @@
 package com.konztic.tragosapp.ui.viewmodel
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.konztic.tragosapp.data.model.DrinkEntity
 import com.konztic.tragosapp.domain.Repo
@@ -8,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class MainViewModel(private val repo: Repo): ViewModel() {
+class MainViewModel @ViewModelInject constructor (private val repo: Repo): ViewModel() {
     private val drinksData = MutableLiveData<String>()
 
     fun setDrink(drinkName: String) {

@@ -15,23 +15,22 @@ import com.konztic.tragosapp.R
 import com.konztic.tragosapp.data.DataSourceImpl
 import com.konztic.tragosapp.data.model.Drink
 import com.konztic.tragosapp.data.model.DrinkEntity
+import com.konztic.tragosapp.domain.DrinkDAO
 import com.konztic.tragosapp.domain.RepoImpl
 import com.konztic.tragosapp.ui.adapters.DrinkAdapter
 import com.konztic.tragosapp.ui.viewmodel.MainViewModel
 import com.konztic.tragosapp.ui.viewmodel.VMFactory
 import com.konztic.tragosapp.vo.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_favorites.*
 import kotlinx.android.synthetic.main.fragment_main.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
 
-    private val viewModel by activityViewModels<MainViewModel> {
-        VMFactory(
-            RepoImpl(
-                DataSourceImpl(AppDatabase.getDatabase(requireActivity().applicationContext))
-            )
-        )
-    }
+    private lateinit var adapter: DrinkAdapter
+    private val viewModel by activityViewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
