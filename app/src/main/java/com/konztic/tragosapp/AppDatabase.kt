@@ -7,15 +7,17 @@ import androidx.room.RoomDatabase
 import com.konztic.tragosapp.data.model.DrinkEntity
 import com.konztic.tragosapp.domain.DrinkDAO
 
-@Database(entities = [ DrinkEntity::class ], version = 1 )
+@Database(entities = [DrinkEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun drinkDAO() : DrinkDAO
+
+    abstract fun drinkDAO(): DrinkDAO
 
     companion object {
-        private var INSTANCE : AppDatabase? = null
+
+        private var INSTANCE: AppDatabase? = null
 
         fun getDatabase(context: Context): AppDatabase {
-            INSTANCE = INSTANCE ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "t_drinks").build()
+            INSTANCE = INSTANCE ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java,"drinks_table").build()
 
             return INSTANCE!!
         }
