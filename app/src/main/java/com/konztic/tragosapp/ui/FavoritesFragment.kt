@@ -54,14 +54,14 @@ class FavoritesFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
     private fun setUpObservers() {
         viewModel.getFavoriteDrinks().observe(viewLifecycleOwner, Observer { response ->
             when (response) {
-                is Resource.Loading -> {
-                }
+                is Resource.Loading -> { }
                 is Resource.Success -> {
                     val favoriteDrinks = response.data.map {
                         Drink(it.drinkId, it.image, it.name, it.description, it.hasAlcohol)
-                    }
+                    }.toMutableList()
 
-                    rv_drinks.adapter = DrinkAdapter(requireContext(), favoriteDrinks, this)
+                    adapter = DrinkAdapter(requireContext(), favoriteDrinks, this)
+                    rv_favorite_drinks.adapter = adapter
                 }
                 is Resource.Failure -> {
                     Toast.makeText(requireContext(), "Something is wrong! ${ response.exception }", Toast.LENGTH_LONG).show()
@@ -77,7 +77,8 @@ class FavoritesFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
 
     override fun onDrinkClick(drink: Drink, position: Int) {
         viewModel.removeFavorite(DrinkEntity(drink.drinkId,drink.image,drink.name,drink.description,drink.hasAlcohol))
-        rv_favorite_drinks.adapter?.notifyItemRemoved(position)
+        adapter.deleteDrink(position)
+        Toast.makeText(requireContext(), "The favorite drink ${ drink.name } was erased", Toast.LENGTH_SHORT).show()
     }
 
 }

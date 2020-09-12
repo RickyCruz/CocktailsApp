@@ -13,12 +13,17 @@ import kotlinx.android.synthetic.main.drink_row.view.*
 
 class DrinkAdapter(
     private val context: Context,
-    private val drinksList: List<Drink>,
+    private val drinksList: MutableList<Drink>,
     private val itemClickListener: OnDrinkClickListener
 ): RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     interface OnDrinkClickListener {
         fun onDrinkClick(drink: Drink, position: Int)
+    }
+
+    fun deleteDrink(position: Int){
+        drinksList.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {

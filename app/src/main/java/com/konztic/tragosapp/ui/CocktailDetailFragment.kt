@@ -55,11 +55,10 @@ class DetailCocktailFragment : Fragment() {
 
         btn_save_or_delete_drink.setOnClickListener {
             viewModel.addFavorite(
-                DrinkEntity(drink.drinkId, drink.image, drink.name, drink.description, drink.hasAlcohol)
+               DrinkEntity(drink.drinkId, drink.image, drink.name, drink.description, drink.hasAlcohol)
             )
 
-            Toast.makeText(requireContext(), "Drink $drink.name saved as favorite", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(requireContext(), "Drink ${ drink.name } saved as favorite", Toast.LENGTH_SHORT).show()
         }
     }
 

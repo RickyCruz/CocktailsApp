@@ -60,7 +60,7 @@ class MainFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
                 }
                 is Resource.Success -> {
                     progress_bar.visibility = View.GONE
-                    rv_drinks.adapter = DrinkAdapter(requireContext(), response.data, this)
+                    rv_drinks.adapter = DrinkAdapter(requireContext(), response.data.toMutableList(), this)
                 }
                 is Resource.Failure -> {
                     progress_bar.visibility = View.GONE
