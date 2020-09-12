@@ -18,4 +18,8 @@ class RepoImpl(private val dataSource: DataSource): Repo {
     override suspend fun getFavoriteDrinks(): Resource<List<DrinkEntity>> {
         return dataSource.getFavoriteDrinks()
     }
+
+    override suspend fun deleteFavorite(drink: DrinkEntity) {
+        return dataSource.deleteDrinkRoom(drink)
+    }
 }

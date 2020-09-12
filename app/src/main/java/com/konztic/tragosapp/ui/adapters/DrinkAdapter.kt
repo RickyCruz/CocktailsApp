@@ -18,7 +18,7 @@ class DrinkAdapter(
 ): RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     interface OnDrinkClickListener {
-        fun onDrinkClick(drink: Drink)
+        fun onDrinkClick(drink: Drink, position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
@@ -44,7 +44,7 @@ class DrinkAdapter(
             itemView.tv_description.text = item.description
 
             itemView.setOnClickListener {
-                itemClickListener.onDrinkClick(item)
+                itemClickListener.onDrinkClick(item, position)
             }
         }
     }

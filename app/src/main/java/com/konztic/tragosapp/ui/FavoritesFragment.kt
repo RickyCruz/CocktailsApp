@@ -1,7 +1,6 @@
 package com.konztic.tragosapp.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +14,7 @@ import com.konztic.tragosapp.AppDatabase
 import com.konztic.tragosapp.R
 import com.konztic.tragosapp.data.DataSource
 import com.konztic.tragosapp.data.model.Drink
+import com.konztic.tragosapp.data.model.DrinkEntity
 import com.konztic.tragosapp.domain.RepoImpl
 import com.konztic.tragosapp.ui.adapters.DrinkAdapter
 import com.konztic.tragosapp.ui.viewmodel.MainViewModel
@@ -62,15 +62,6 @@ class FavoritesFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
                         Drink(it.drinkId, it.image, it.name, it.description, it.hasAlcohol)
                     }
 
-                    /*val list = response.data
-                    val listDrink = mutableListOf<Drink>()
-
-                    for (drink in list) {
-                        listDrink.add(
-                            Drink(drink.drinkId, drink.image, drink.name, drink.description, drink.hasAlcohol)
-                        )
-                    }*/
-
                     rv_drinks.adapter = DrinkAdapter(requireContext(), favoriteDrinks, this)
                 }
                 is Resource.Failure -> {
@@ -85,8 +76,9 @@ class FavoritesFragment : Fragment(), DrinkAdapter.OnDrinkClickListener {
         rv_favorite_drinks.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
-    override fun onDrinkClick(drink: Drink) {
-        TODO("Not yet implemented")
+    override fun onDrinkClick(drink: Drink, position: Int) {
+        viewModel.removeFavorite(DrinkEntity(drink.drinkId,drink.image,drink.name,drink.description,drink.hasAlcohol))
+        rv_favorite_drinks.adapter?.notifyItemRemoved(position)
     }
 
 }

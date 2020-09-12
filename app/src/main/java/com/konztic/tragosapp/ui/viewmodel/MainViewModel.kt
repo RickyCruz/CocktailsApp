@@ -46,4 +46,10 @@ class MainViewModel(private val repo: Repo): ViewModel() {
             emit(Resource.Failure(e))
         }
     }
+
+    fun removeFavorite(drink: DrinkEntity) {
+        viewModelScope.launch {
+            repo.deleteFavorite(drink)
+        }
+    }
 }

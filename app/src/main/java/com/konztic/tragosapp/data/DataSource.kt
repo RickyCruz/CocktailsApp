@@ -18,6 +18,10 @@ class DataSource(private val appDatabase: AppDatabase) {
         appDatabase.drinkDAO().addFavorite(drink)
     }
 
+     suspend fun deleteDrinkRoom(drink: DrinkEntity) {
+        appDatabase.drinkDAO().deleteFavorite(drink)
+    }
+
     suspend fun getFavoriteDrinks(): Resource<List<DrinkEntity>> {
         return Resource.Success(appDatabase.drinkDAO().getAllFavoriteDrinks())
     }
